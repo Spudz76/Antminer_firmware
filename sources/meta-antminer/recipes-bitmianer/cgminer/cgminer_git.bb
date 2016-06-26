@@ -4,8 +4,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS = "ncurses curl udev"
 
-SRCREV = "v4.9.2"
-PV = "${SRCREV}+${SRCPV}"
+SRCREV = "HEAD"
+PV = "${SRCREV}+git${SRCPV}"
 PR = "r1"
 SRC_URI = "git://github.com/ckolivas/cgminer.git;protocol=https;branch=master"
 S = "${WORKDIR}/git"

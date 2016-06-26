@@ -15,7 +15,11 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/ntpdate.sh ${D}${sysconfdir}/init.d
 	update-rc.d -r ${D} ntpdate.sh start 39 S .
 
-	install -m 0755 ${WORKDIR}/cgminer.sh ${D}${sysconfdir}/init.d
+	if [ x"S7" == x"${Miner_TYPE}" -o x"S7+" == x"${Miner_TYPE}" ]; then
+		install -m 0755 ${WORKDIR}/cgminer_s7.sh ${D}${sysconfdir}/init.d/cgminer.sh
+	else
+		install -m 0755 ${WORKDIR}/cgminer.sh ${D}${sysconfdir}/init.d
+	fi
 	update-rc.d -r ${D} cgminer.sh start 70 S .
 
 	install -m 0755 ${WORKDIR}/pgnand.sh ${D}${sysconfdir}/init.d
@@ -38,7 +42,12 @@ do_install_append() {
 	#install -d ${D}${base_sbindir}
         #install -m 0755 ${WORKDIR}/d-ddos-m.sh ${D}${base_sbindir}/
         
+	fi
 
+	if [ x"S7" == x"${Miner_TYPE}" -o x"S7+" == x"${Miner_TYPE}" ]; then
+		install -d ${D}${base_sbindir}
+		install -m 0755 ${WORKDIR}/reset.sh ${D}${base_sbindir}/
+		install -m 0755 ${WORKDIR}/reboot.safe ${D}${base_sbindir}/
 	fi
 
         #install -d ${D}${base_sbindir}
@@ -56,18 +65,24 @@ do_install_append() {
 		install -m 0400 ${WORKDIR}/network.conf.factory ${D}${sysconfdir}/network.conf.factory
 		install -m 0400 ${WORKDIR}/cgminer_s5.conf.factory ${D}${sysconfdir}/cgminer.conf.factory
 	elif [ x"S2" == x"${Miner_TYPE}" ]; then
-		echo "AntMiner S2" > ${WORKDIR}/user_defined_lcd.factory
+		echo "AntMiner ${Miner_TYPE}" > ${WORKDIR}/user_defined_lcd.factory
 		install -m 0400 ${WORKDIR}/network.conf.factory ${D}${sysconfdir}/network.conf.factory
 		install -m 0400 ${WORKDIR}/cgminer_s2.conf.factory ${D}${sysconfdir}/cgminer.conf.factory
 	elif [ x"S4+" == x"${Miner_TYPE}" ]; then
-		echo "AntMiner S4+" > ${WORKDIR}/user_defined_lcd.factory
+		echo "AntMiner ${Miner_TYPE}" > ${WORKDIR}/user_defined_lcd.factory
 		install -m 0400 ${WORKDIR}/network.conf.factory ${D}${sysconfdir}/network.conf.factory
 		install -m 0400 ${WORKDIR}/cgminer_s4p.conf.factory ${D}${sysconfdir}/cgminer.conf.factory
 	elif [ x"S5+" == x"${Miner_TYPE}" ]; then
 		install -m 0400 ${WORKDIR}/network.conf.factory ${D}${sysconfdir}/network.conf.factory
 		install -m 0400 ${WORKDIR}/cgminer_s5p.conf.factory ${D}${sysconfdir}/cgminer.conf.factory
+	elif [ x"S7" == x"${Miner_TYPE}" ]; then
+		install -m 0400 ${WORKDIR}/network.conf.factory ${D}${sysconfdir}/network.conf.factory
+		install -m 0400 ${WORKDIR}/cgminer_s7_600.conf.factory ${D}${sysconfdir}/cgminer.conf.factory
+	elif [ x"S7+" == x"${Miner_TYPE}" ]; then
+		install -m 0400 ${WORKDIR}/network.conf.factory ${D}${sysconfdir}/network.conf.factory
+		install -m 0400 ${WORKDIR}/cgminer_s7_700.conf.factory ${D}${sysconfdir}/cgminer.conf.factory
 	else	
-		echo "AntMiner S4" > ${WORKDIR}/user_defined_lcd.factory
+		echo "AntMiner ${Miner_TYPE}" > ${WORKDIR}/user_defined_lcd.factory
 		install -m 0400 ${WORKDIR}/network.conf.factory ${D}${sysconfdir}/network.conf.factory
 		install -m 0400 ${WORKDIR}/cgminer.conf.factory ${D}${sysconfdir}/cgminer.conf.factory
 	fi
@@ -91,6 +106,7 @@ SRC_URI_append = " file://network.sh"
 SRC_URI_append = " file://network.conf.factory"
 SRC_URI_append = " file://network_c1.conf.factory"
 SRC_URI_append = " file://cgminer.sh"
+SRC_URI_append = " file://cgminer_s7.sh"
 SRC_URI_append = " file://cgminer.conf.factory"
 SRC_URI_append = " file://cgminer_c1.conf.factory"
 SRC_URI_append = " file://cgminer_c2.conf.factory"
@@ -98,6 +114,8 @@ SRC_URI_append = " file://cgminer_s4p.conf.factory"
 SRC_URI_append = " file://cgminer_s5p.conf.factory"
 SRC_URI_append = " file://cgminer_s5.conf.factory"
 SRC_URI_append = " file://cgminer_s2.conf.factory"
+SRC_URI_append = " file://cgminer_s7_600.conf.factory"
+SRC_URI_append = " file://cgminer_s7_700.conf.factory"
 #SRC_URI_append = " file://asic-freq.config"
 #SRC_URI_append = " file://s3-asic-freq.config"
 SRC_URI_append = " file://user_setting.factory"

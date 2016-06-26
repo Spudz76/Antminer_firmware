@@ -10,7 +10,33 @@ set -e
 #set -x
 test -x "$DAEMON" || exit 0
 
+
+
+
 do_start() {
+
+	NIC=eth0
+	MAC=`LANG=C ifconfig $NIC | awk '/HWaddr/{ print $5 }'`
+	#echo $MAC | tr '[a-z]' '[A-Z]'
+	upmac=`echo $MAC | tr '[a-z]' '[A-Z]'`
+	#echo $upmac
+	curti=`date "+%Y-%m-%d %H:%M:%S"`
+	#echo $curti
+
+	OUTPUT=/tmp/pic_mac
+	echo "${upmac:0:2}"" ${curti:2:2}" > $OUTPUT
+	echo "${upmac:3:2}"" ${curti:5:2}" >> $OUTPUT
+	echo "${upmac:6:2}"" ${curti:8:2}" >> $OUTPUT
+	echo "${upmac:9:2}"" ${curti:11:2}" >> $OUTPUT
+	echo "${upmac:12:2}"" ${curti:14:2}" >> $OUTPUT
+	echo "${upmac:15:2}"" ${curti:17:2}" >> $OUTPUT
+
+	# check network state
+	#network_ok=`ping -c 1 114.114.114.114 | grep " 0% packet loss" | wc -l`
+	#if [ $network_ok -eq 0 ];then
+	#    return
+	#fi
+
 	# gpio1_16 = 48 = net check LED
 	if [ ! -e /sys/class/gpio/gpio48 ]; then
 		echo 48 > /sys/class/gpio/export
@@ -54,7 +80,7 @@ do_start() {
 	#timeout=`awk '{if($1 == "option" && $2=="\047timeout\047") print $3}' $CONFIG_NAME | sed "s/'//g"`
 	freq_value=0782
 	chip_value=200
-	chip_num=40
+	chip_num=54
 	freq_m=$(($chip_value * 1000))                                                                           
 	timeout=$((2 ** (32 - 8) * (256 / $chip_num) / freq_m / 64))                                             
 	echo $timeout
@@ -68,7 +94,7 @@ do_start() {
 	#PARAMS="--bitmain-dev /dev/bitmain-asic --bitmain-options 115200:32:8:$timeout:$chip_value:$real_freq"
 	PARAMS="--bitmain-dev /dev/bitmain-asic --bitmain-options 115200:32:8:$timeout:$chip_value:$freq_value:0725 --bitmain-checkn2diff --bitmain-hwerror --version-file /usr/bin/compile_time --queue $queue_value"
 	echo PARAMS = $PARAMS
-	start-stop-daemon -b -S -x screen -- -S cgminer -t cgminer -m -d "$DAEMON" $PARAMS --api-listen --default-config /config/cgminer.conf
+	start-stop-daemon -b -S -x screen -- -S cgminer -t cgminer -m -d "$DAEMON" $PARAMS --api-listen --default-config /config/cgminer.conf -T
 	#cgminer $PARAMS -D --api-listen --default-config /config/cgminer.conf 2>&1 | tee log
 }
 

@@ -1,5 +1,6 @@
 export IMAGE_BASENAME = "antminer"
 IMAGE_INSTALL = " \
+	u-boot-denx-fwenv \
 	busybox \
 	base-files \
 	base-passwd \
@@ -10,6 +11,7 @@ IMAGE_INSTALL = " \
 	tinylogin \
 	i2c-tools \
 	screen \
+	nodejs \
 	dropbear \
 	libcurl \
 	lighttpd \
