@@ -1,5 +1,0 @@
-#!/bin/sh
-
-sleep 30s
-/etc/init.d/cgminer.sh restart
-
