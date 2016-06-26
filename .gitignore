@@ -1,0 +1,17 @@
+bitbake.lock
+build/
+cache/
+conf/auto.conf
+conf/sanity_info
+conf/site.conf
+deploy/
+environment-angstrom-v2013.06
+pseudodone
+sources/bitbake/
+sources/downloads/
+sources/meta-angstrom/
+sources/meta-beagleboard/
+sources/meta-linaro/
+sources/meta-openembedded/
+sources/meta-ti/
+sources/openembedded-core/
